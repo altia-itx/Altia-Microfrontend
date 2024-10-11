@@ -3,54 +3,64 @@ const { ModuleFederationPlugin } = require('webpack').container;
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.tsx', // Entry point for your application
-  mode: 'development', // Set mode to development
+  entry: './src/index.tsx',
+  mode: 'development',
   devServer: {
-    static: path.join(__dirname, 'dist'), // Serve static files from dist
-    port: 3000, // Port for the development server
+    static: path.join(__dirname, 'dist'),
+    port: 3000,
   },
   output: {
-    publicPath: 'http://localhost:3000/', // Public path for loading remote modules
+    publicPath: 'http://localhost:3000/',
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.jsx'], // Allow these file extensions
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
   module: {
     rules: [
       {
-        test: /\.tsx?$/, // Regex for .ts and .tsx files
-        use: 'ts-loader', // Use ts-loader to handle TypeScript files
-        exclude: /node_modules/, // Exclude node_modules
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
       },
       {
-        test: /\.jsx?$/, // Regex for .js and .jsx files
+        test: /\.jsx?$/,
         use: {
-          loader: 'babel-loader', // Use babel-loader for JS/JSX
+          loader: 'babel-loader',
           options: {
             presets: [
-              '@babel/preset-env', // Preset for modern JavaScript
-              '@babel/preset-react', // Preset for React
-              '@babel/preset-typescript', // Optional: If you're using TypeScript with Babel
+              '@babel/preset-env',
+              '@babel/preset-react',
+              '@babel/preset-typescript',
             ],
           },
         },
-        exclude: /node_modules/, // Exclude node_modules
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'postcss-loader'
+        ],
       },
     ],
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'host', // Name of the host application
+      name: 'host',
       remotes: {
-        remote: 'remote@http://localhost:3001/remoteEntry.js', // Remote application configuration
+        remote: 'remote@http://localhost:3001/remoteEntry.js',
       },
       shared: {
-        react: { singleton: true, eager: true },    // Eager consumption
+        react: { singleton: true, eager: true },
         'react-dom': { singleton: true, eager: true },
+        tailwindcss: { singleton: true },
       },
     }),
     new HtmlWebpackPlugin({
-      template: './public/index.html', // HTML template for the application
+      template: './public/index.html',
+      inject: true,
     }),
   ],
 };

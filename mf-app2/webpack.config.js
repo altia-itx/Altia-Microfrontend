@@ -23,6 +23,14 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'postcss-loader'
+        ],
+      },
     ],
   },
   plugins: [
@@ -30,7 +38,8 @@ module.exports = {
       name: 'remote',
       filename: 'remoteEntry.js',
       exposes: {
-        './Button':'./src/Button', 
+        './Button': './src/Button',
+        './index.css': './src/index.css',
       },
       shared: {
         react: { singleton: true, eager: true },
