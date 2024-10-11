@@ -1,13 +1,14 @@
 
-// import 'remote/index.css';
 import React from "react";
 import { createRoot } from "react-dom/client";
-
+import('remote/index.css');
 const RemoteButton = React.lazy(() => import("remote/Button"));
+import Header from "@components/Header";
+
 
 const App = () => (
   <div>
-    <h1 className="text-2xl font-bold">Microfrontend App 1</h1>
+    <Header></Header>
     <React.Suspense fallback={<div>Loading...</div>}>
       <RemoteButton />
     </React.Suspense>

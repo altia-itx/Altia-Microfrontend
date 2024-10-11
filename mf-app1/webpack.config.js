@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 const path = require('path');
 
@@ -14,6 +15,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      '@components': path.resolve(__dirname, 'src/components'),
+      '@pages': path.resolve(__dirname, 'src/pages')
+    },
   },
   module: {
     rules: [
@@ -37,12 +43,8 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          'postcss-loader'
-        ],
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
     ],
   },
@@ -55,12 +57,13 @@ module.exports = {
       shared: {
         react: { singleton: true, eager: true },
         'react-dom': { singleton: true, eager: true },
-        tailwindcss: { singleton: true },
+        tailwindcss: { singleton: true, eager: true },
       },
     }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
       inject: true,
     }),
+    new MiniCssExtractPlugin(),
   ],
 };

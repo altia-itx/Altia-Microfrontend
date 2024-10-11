@@ -44,6 +44,8 @@ module.exports = {
       shared: {
         react: { singleton: true, eager: true },
         'react-dom': { singleton: true, eager: true },
+        tailwindcss: { singleton: true, eager: true },
+
       },
     }),
     new HtmlWebpackPlugin({
