@@ -18,11 +18,21 @@ module.exports = {
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '@components': path.resolve(__dirname, 'src/components'),
-      '@pages': path.resolve(__dirname, 'src/pages')
+      '@pages': path.resolve(__dirname, 'src/pages'),
+      '@assets': path.resolve(__dirname, 'src/assets'),
     },
   },
   module: {
     rules: [
+      {
+        test: /\.(png|jpg|jpeg|gif|svg)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+          },
+        },
+      },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
@@ -53,11 +63,13 @@ module.exports = {
       name: 'host',
       remotes: {
         remote: 'remote@http://localhost:3001/remoteEntry.js',
+        mfApp3: 'mfApp3@http://localhost:3002/query_remoteEntry.js',
       },
       shared: {
         react: { singleton: true, eager: true },
         'react-dom': { singleton: true, eager: true },
         tailwindcss: { singleton: true, eager: true },
+        '@tanstack/react-query': { singleton: true, eager: true },
       },
     }),
     new HtmlWebpackPlugin({
