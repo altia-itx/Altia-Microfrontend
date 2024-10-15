@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import Button from './Button';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import Button from "./Button";
+import "./index.css";
 
 const App: React.FC = () => (
   <>
@@ -9,6 +9,6 @@ const App: React.FC = () => (
   </>
 );
 
-const container = document.getElementById('root');
+const container = document.getElementById("root");
 const root = ReactDOM.createRoot(container!);
 root.render(<App />);

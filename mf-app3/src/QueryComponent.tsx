@@ -1,41 +1,55 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import './index.css';
-import { fetchData } from '@/api/queries/products';
-import { Product } from '@/api/queries/types';
-
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import "./index.css";
+import { fetchData, filterProducts } from "@/api/queries/products";
+import { Product } from "@/api/queries/types";
+import AddToCartButton from "@/components/AddToCartButton";
+import SearchInput from "@/components/SearchInput";
+import useCounter from "remote/useCounter";
+import ProductCard from "@/components/ProductCard";
 const QueryComponent: React.FC = () => {
-    const { data, error, isLoading } = useQuery<Product[]>({
-        queryKey: ['products'],
-        queryFn: fetchData,
+  const { pagination } = useCounter();
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [filteredProducts, setFilteredProducts] = React.useState<Product[] >([]);
+
+  const { data, isLoading, isError, error } = useQuery<Product[]>({
+    queryKey: ["products", pagination.offset, pagination.limit],
+    queryFn: () => fetchData(pagination.offset, pagination.limit),
+  });
+
+  if (isLoading) {
+    return <p className="text-center text-blue-600">Loading...</p>;
+  }
+  if (isError) {
+    return <p className="text-center text-red-600">Error fetching data</p>;
+  }
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    const filteredProducts = data?.filter((product: any) => {
+      return product.title.toLowerCase().includes(query.toLowerCase());
     });
+    if (filteredProducts) {
+      setFilteredProducts(filteredProducts);
+    }
+  }
 
-    if (isLoading) return <p className="text-center text-blue-600">Loading...</p>;
-    if (error) return <p className="text-center text-red-600">Error fetching data</p>;
-    console.log(data);
-
-    return (
-        <div className="max-w-5xl mx-auto p-6">
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {data?.map((product: any) => (
-                    <li key={product.id} className="flex flex-col p-4 border rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <div className="flex flex-col flex-grow">
-                            <h3 className="text-xl font-bold text-gray-800">{product.title}</h3>
-                            <p className="mt-2 text-gray-600">{product.description}</p>
-                        </div>
-                        <img
-                            src={product.images[0]}
-                            alt={product.title}
-                            className="mt-4 w-full h-48 object-cover rounded-lg"
-                        />
-                        <span className="block mt-4 text-lg font-semibold text-blue-600 text-right">
-                            Precio: {product.price} €
-                        </span>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+  return (
+    <div className="max-w-5xl mx-auto p-6">
+      <SearchInput onSearch={handleSearch} />
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {filteredProducts.length > 0 ? (
+          filteredProducts.map((product: any) => (
+            <ProductCard key={product.id} product={product} />
+          ))
+        ) : (
+          data?.map((product: any) => (
+            <ProductCard key={product.id} product={product} />
+          ))
+        )}
+      </ul>
+    </div>
+  );
 };
 
 export default QueryComponent;

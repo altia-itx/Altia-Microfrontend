@@ -1,28 +1,34 @@
 import React from 'react';
 import useCounter from './store';
-import { Cross, MinusIcon } from 'lucide-react';
-const CounterComponent: React.FC = () => {
-    const { count, increase } = useCounter();
+import { ArrowBigLeft, ArrowBigRight } from 'lucide-react';
 
-    return (
-        <div className="flex flex-col items-center justify-center h-screen/2 pt-12 pb-6">
-            <h2 className="text-2xl font-bold mb-4">Añadir: {count}</h2>
-            <div className="flex space-x-4">
-                <button
-                    onClick={() => increase(1)}
-                    className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition"
-                >
-                    <Cross />
-                </button>
-                <button
-                    onClick={() => increase(-1)}
-                    className="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600 transition"
-                >
-                    <MinusIcon />
-                </button>
-            </div>
-        </div>
-    );
+const CounterComponent: React.FC = () => {
+  const { pagination, nextPage, previousPage } = useCounter();
+
+  return (
+    <div className="flex flex-col items-center justify-center h-screen/2 pt-8 pb-12 border-2">
+      <div className="text-xl font-semibold mb-4">
+        Página {pagination.offset / pagination.limit + 1}
+      </div>
+      <div className="flex space-x-24">
+        {pagination.offset > -1 && (
+          <button
+            onClick={previousPage}
+            className="bg-blue-500 text-white font-bold py-2 px-4 rounded 
+                    hover:bg-blue-700 transition">
+            <ArrowBigLeft />
+          </button>
+        )}
+        <button
+          onClick={nextPage}
+          className="bg-blue-500 text-white font-bold py-2 px-4 rounded
+                         hover:bg-blue-700 transition"
+        >
+          <ArrowBigRight />
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default CounterComponent;

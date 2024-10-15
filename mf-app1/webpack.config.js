@@ -1,25 +1,25 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { ModuleFederationPlugin } = require('webpack').container;
-const path = require('path');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { ModuleFederationPlugin } = require("webpack").container;
+const path = require("path");
 
 module.exports = {
-  entry: './src/index.tsx',
-  mode: 'development',
+  entry: "./src/index.tsx",
+  mode: "development",
   devServer: {
-    static: path.join(__dirname, 'dist'),
+    static: path.join(__dirname, "dist"),
     port: 3000,
   },
   output: {
-    publicPath: 'http://localhost:3000/',
+    publicPath: "http://localhost:3000/",
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.jsx'],
+    extensions: [".tsx", ".ts", ".js", ".jsx"],
     alias: {
-      '@': path.resolve(__dirname, 'src'),
-      '@components': path.resolve(__dirname, 'src/components'),
-      '@pages': path.resolve(__dirname, 'src/pages'),
-      '@assets': path.resolve(__dirname, 'src/assets'),
+      "@": path.resolve(__dirname, "src"),
+      "@components": path.resolve(__dirname, "src/components"),
+      "@pages": path.resolve(__dirname, "src/pages"),
+      "@assets": path.resolve(__dirname, "src/assets"),
     },
   },
   module: {
@@ -27,26 +27,30 @@ module.exports = {
       {
         test: /\.(png|jpg|jpeg|gif|svg)$/,
         use: {
-          loader: 'file-loader',
+          loader: "file-loader",
           options: {
-            name: '[name].[ext]',
+            name: "[name].[ext]",
           },
         },
       },
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: "ts-loader",
         exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
       {
         test: /\.jsx?$/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
             presets: [
-              '@babel/preset-env',
-              '@babel/preset-react',
-              '@babel/preset-typescript',
+              "@babel/preset-env",
+              "@babel/preset-react",
+              "@babel/preset-typescript",
             ],
           },
         },
@@ -54,26 +58,26 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
       },
     ],
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'host',
+      name: "host",
       remotes: {
-        remote: 'remote@http://localhost:3001/remoteEntry.js',
-        mfApp3: 'mfApp3@http://localhost:3002/query_remoteEntry.js',
+        remote: "remote@http://localhost:3001/remoteEntry.js",
+        mfApp3: "mfApp3@http://localhost:3002/query_remoteEntry.js",
       },
       shared: {
         react: { singleton: true, eager: true },
-        'react-dom': { singleton: true, eager: true },
+        "react-dom": { singleton: true, eager: true },
         tailwindcss: { singleton: true, eager: true },
-        '@tanstack/react-query': { singleton: true, eager: true },
+        "@tanstack/react-query": { singleton: true, eager: true },
       },
     }),
     new HtmlWebpackPlugin({
-      template: './public/index.html',
+      template: "./public/index.html",
       inject: true,
     }),
     new MiniCssExtractPlugin(),
