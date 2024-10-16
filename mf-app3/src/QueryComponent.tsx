@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import "./index.css";
-import { fetchData, filterProducts } from "@/api/queries/products";
+import { fetchData } from "@/api/queries/products";
 import { Product } from "@/api/queries/types";
-import AddToCartButton from "@/components/AddToCartButton";
 import SearchInput from "@/components/SearchInput";
 import useCounter from "remote/useCounter";
 import ProductCard from "@/components/ProductCard";
+import CartCard from "./components/CartCard";
+import { ShoppingBasket } from 'lucide-react';
 const QueryComponent: React.FC = () => {
   const { pagination } = useCounter();
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [filteredProducts, setFilteredProducts] = React.useState<Product[] >([]);
+  const [filteredProducts, setFilteredProducts] = React.useState<Product[]>([]);
+  const [cart, setCart] = React.useState<Product[]>([]);
+  const [open, setOpen] = useState(false);
 
+  const handleAddToCart = (product: Product) => {
+    setCart([...cart, product]);
+    console.log(cart, 'cart', product, 'product');
+  };
   const { data, isLoading, isError, error } = useQuery<Product[]>({
     queryKey: ["products", pagination.offset, pagination.limit],
     queryFn: () => fetchData(pagination.offset, pagination.limit),
@@ -29,22 +36,45 @@ const QueryComponent: React.FC = () => {
     const filteredProducts = data?.filter((product: any) => {
       return product.title.toLowerCase().includes(query.toLowerCase());
     });
+
+    console.log(filteredProducts, query);
     if (filteredProducts) {
       setFilteredProducts(filteredProducts);
     }
   }
+  const openPopup = () => {
+    setOpen(!open);
+  };
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <SearchInput onSearch={handleSearch} />
+      <div className="flex justify-between ">
+        <SearchInput onSearch={handleSearch} />
+        {open && (
+          <div>
+            {cart.length > 0 ? (
+              cart.map((product) => (
+                <CartCard key={product.id} product={product} />
+              ))
+            ) : (
+              <p>No products in the cart</p>
+            )}
+          </div>
+        )}
+        <button onClick={openPopup} ><ShoppingBasket className="w-12 h-12 text-blue-600" />{cart.length > 0 ? (
+          <p className="mb-4">{cart.length}</p>
+        ) : (
+          <p className="mb-4">¡Añade productos!</p>
+        )}</button>
+      </div>
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {filteredProducts.length > 0 ? (
+        {filteredProducts.length > 0 ? (
           filteredProducts.map((product: any) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} onClick={handleAddToCart} />
           ))
         ) : (
           data?.map((product: any) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} onClick={handleAddToCart} />
           ))
         )}
       </ul>
