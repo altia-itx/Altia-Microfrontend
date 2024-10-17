@@ -17,7 +17,6 @@ const QueryComponent: React.FC = () => {
 
   const handleAddToCart = (product: Product) => {
     setCart([...cart, product]);
-    console.log(cart, 'cart', product, 'product');
   };
   const { data, isLoading, isError, error } = useQuery<Product[]>({
     queryKey: ["products", pagination.offset, pagination.limit],
@@ -37,7 +36,6 @@ const QueryComponent: React.FC = () => {
       return product.title.toLowerCase().includes(query.toLowerCase());
     });
 
-    console.log(filteredProducts, query);
     if (filteredProducts) {
       setFilteredProducts(filteredProducts);
     }
