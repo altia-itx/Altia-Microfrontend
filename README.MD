@@ -31,12 +31,12 @@ La arquitectura de microfrontends permite dividir una aplicación en partes más
 
 ### mf-app1
 
-- **Descripción:** Este microfrontend es una aplicación React que proporciona [una breve descripción de la funcionalidad].
+- **Descripción:** Este microfrontend es una aplicación React que actúa de host.
 - **Estilo:** Este microfrontend utiliza Tailwind CSS para el diseño y la maquetación.
 
 ### mf-app2
 
-- **Descripción:** Este microfrontend es responsable de [una breve descripción de la funcionalidad].
+- **Descripción:** Este microfrontend es remota.
 - **Zustand:** Se instancia `zustand`, una librería de gestión de estado, que será utilizada por otros microfrontends.
 - **Estilo:** Este microfrontend utiliza Tailwind CSS para el diseño y la maquetación.
 
