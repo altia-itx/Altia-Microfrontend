@@ -8,10 +8,11 @@
     ],
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
       "@components/*": ["src/components/*"],
       "@pages/*": ["src/pages/*"],
       "@assets/*": ["src/assets/*"],
+      "@lib/*": ["src/lib/*"]
     },
     "outDir": "./dist/",
     "allowJs": true,

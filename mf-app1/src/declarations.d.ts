@@ -15,10 +15,25 @@ declare module "remote/index.css" {
 }
 
 declare module "@components/*" {
-  const content: any;
+  import { React } from "react";
+  const content: React.ComponentType<any>;
   export default content;
 }
+
 declare module "*.png" {
   const content: string;
   export default content;
+}
+
+declare module "@lib/utils" {
+  import { clsx, type ClassValue } from "clsx";
+  import { twMerge } from "tailwind-merge";
+
+  export function cn(...inputs: ClassValue[]): string;
+}
+
+declare module "@components/*" {
+  import { React } from "react";
+  const Card: React.ComponentType<any>;
+  export { Card };
 }

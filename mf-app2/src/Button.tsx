@@ -4,14 +4,14 @@ import { ArrowBigLeft, ArrowBigRight } from 'lucide-react';
 
 const CounterComponent: React.FC = () => {
   const { pagination, nextPage, previousPage } = useCounter();
-
+console.log('pagination', pagination)
   return (
     <div className="flex flex-col items-center justify-center h-screen/2 pt-8 pb-12 border-2">
       <div className="text-xl font-semibold mb-4">
         Página {pagination.offset / pagination.limit + 1}
       </div>
       <div className="flex space-x-24">
-        {pagination.offset > -1 && (
+        {pagination.offset > 0 && (
           <button
             onClick={previousPage}
             className="bg-blue-500 text-white font-bold py-2 px-4 rounded 
